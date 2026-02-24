@@ -1,19 +1,45 @@
-{% extends "layout.html" %}
-{% block content %}
-<div class="center-card">
-  <div class="card">
-    <h1 class="h1">Login</h1>
-    <p class="muted">Default: <b>admin</b> / <b>admin123</b> (غيّرهم لاحقاً)</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | SALEM NET</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <form method="POST" class="form">
-      <label>Username</label>
-      <input name="username" required placeholder="admin">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
 
-      <label>Password</label>
-      <input name="password" type="password" required placeholder="••••••••">
+<body class="login-page">
 
-      <button class="btn primary" type="submit">Sign in</button>
-    </form>
-  </div>
+<div class="login-wrapper">
+
+    <div class="logo-section">
+        <div class="wifi-icon">
+            <i class="fas fa-wifi"></i>
+        </div>
+        <h1>SALEM NET</h1>
+        <p>Internet Service Provider</p>
+    </div>
+
+    <div class="login-box">
+        <h2>Administrator Login</h2>
+
+        <form method="POST">
+            <div class="input-group">
+                <input type="text" name="username" placeholder="Username" required>
+                <i class="fa fa-user"></i>
+            </div>
+
+            <div class="input-group">
+                <input type="password" name="password" placeholder="Password" required>
+                <i class="fa fa-lock"></i>
+            </div>
+
+            <button type="submit" class="btn-login">Login</button>
+        </form>
+    </div>
+
 </div>
-{% endblock %}
+
+</body>
+</html>
