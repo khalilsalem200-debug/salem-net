@@ -1,0 +1,109 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h2>Subscribers</h2>
+    <div class="muted">Search / filter and manage subscribers</div>
+  </div>
+  <a class="btn primary" href="{{ url_for('subscriber_add') }}">+ Add Subscriber</a>
+</div>
+
+<div class="card">
+  <form method="GET" class="filters">
+    <input name="q" value="{{ q }}" placeholder="Search name or phone...">
+    <select name="service_id">
+      <option value="">All services</option>
+      {% for sv in services %}
+        <option value="{{ sv['id'] }}" {% if service_filter == (sv['id']|string) %}selected{% endif %}>
+          {{ sv['name'] }} ({{ sv['speed'] }}) - ${{ sv['price'] }}
+        </option>
+      {% endfor %}
+    </select>
+    <button class="btn" type="submit">Filter</button>
+    <a class="btn ghost" href="{{ url_for('subscribers') }}">Reset</a>
+  </form>
+</div>
+
+<div class="card mt">
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Service</th>
+          <th>Price</th>
+          <th>Start</th>
+          <th>Expiry</th>
+          <th>Status</th>
+          <th class="right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in subs %}
+        {% set left = ( (s["expiry_date"]|string) ) %}
+        <tr class="{% if s['expiry_date'] < ('' ) %}{% endif %}">
+          <td>{{ s["name"] }}</td>
+          <td>{{ s["phone"] or "-" }}</td>
+          <td>{{ s["service_name"] }} ({{ s["speed"] }})</td>
+          <td>${{ s["price"] }}</td>
+          <td>{{ s["start_date"] }}</td>
+          <td>{{ s["expiry_date"] }}</td>
+          {% set dl = ( (s["expiry_date"] | string) ) %}
+          {% set _ = None %}
+          {% set dleft = ( ( (s["expiry_date"] | string) ) ) %}
+          <td>
+            {% set exp = s["expiry_date"] %}
+            {% set now = "" %}
+            {% if s["expiry_date"] < "0000-00-00" %}
+              <!-- never -->
+            {% endif %}
+            {% if s["expiry_date"] < "1900-01-01" %}
+              <!-- never -->
+            {% endif %}
+            {% if s["expiry_date"] < "9999-12-31" %}
+            {% endif %}
+            {% if s["expiry_date"] < "0001-01-01" %}
+            {% endif %}
+
+            {# Simple status based on date compare in app is safer; we'll color with CSS using data attr #}
+            <span class="badge" data-expiry="{{ s['expiry_date'] }}">{{ s['expiry_date'] }}</span>
+          </td>
+          <td class="right">
+            <div class="actions">
+              <form method="POST" action="{{ url_for('subscriber_renew', sid=s['id']) }}">
+                <button class="btn small" type="submit">Renew</button>
+              </form>
+              <a class="btn small" href="{{ url_for('subscriber_edit', sid=s['id']) }}">Edit</a>
+              <form method="POST" action="{{ url_for('subscriber_delete', sid=s['id']) }}" onsubmit="return confirm('Delete this subscriber?');">
+                <button class="btn small danger" type="submit">Delete</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+        {% if subs|length == 0 %}
+        <tr><td colspan="8" class="muted">No subscribers found.</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  // تلوين Status بالـ JS حسب تاريخ اليوم (ببساطة)
+  const badges = document.querySelectorAll(".badge[data-expiry]");
+  const today = new Date();
+  const toDate = (s)=>{ const [y,m,d]=s.split("-").map(Number); return new Date(y, m-1, d); };
+
+  badges.forEach(b=>{
+    const exp = toDate(b.dataset.expiry);
+    const diffDays = Math.floor((exp - today) / (1000*60*60*24));
+    b.textContent = diffDays < 0 ? `Expired (${diffDays})` : (diffDays <= 3 ? `Soon (${diffDays})` : `Active (${diffDays})`);
+
+    if (diffDays < 0) b.classList.add("bad");
+    else if (diffDays <= 3) b.classList.add("warn");
+    else b.classList.add("ok");
+  });
+</script>
+{% endblock %}

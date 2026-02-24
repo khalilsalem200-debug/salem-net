@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="page-head">
+  <h2>Dashboard</h2>
+  <div class="muted">Overview of your network subscribers</div>
+</div>
+
+<div class="grid-4">
+  <div class="stat">
+    <div class="stat-k">Total</div>
+    <div class="stat-v">{{ total }}</div>
+  </div>
+  <div class="stat ok">
+    <div class="stat-k">Active</div>
+    <div class="stat-v">{{ active }}</div>
+  </div>
+  <div class="stat warn">
+    <div class="stat-k">Expiring ≤ 3 days</div>
+    <div class="stat-v">{{ expiring_soon }}</div>
+  </div>
+  <div class="stat bad">
+    <div class="stat-k">Expired</div>
+    <div class="stat-v">{{ expired }}</div>
+  </div>
+</div>
+
+<div class="card mt">
+  <div class="row">
+    <div>
+      <h3 class="h3">Expected Monthly Income (Active)</h3>
+      <div class="big">${{ "%.2f"|format(expected_income) }}</div>
+    </div>
+    <a class="btn" href="{{ url_for('subscribers') }}">Manage Subscribers</a>
+  </div>
+</div>
+
+<div class="card mt">
+  <div class="row">
+    <h3 class="h3">Latest Subscribers</h3>
+  </div>
+
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Service</th>
+          <th>Price</th>
+          <th>Start</th>
+          <th>Expiry</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in subs[:10] %}
+        <tr>
+          <td>{{ s["name"] }}</td>
+          <td>{{ s["service_name"] }} ({{ s["speed"] }})</td>
+          <td>${{ s["price"] }}</td>
+          <td>{{ s["start_date"] }}</td>
+          <td>{{ s["expiry_date"] }}</td>
+        </tr>
+        {% endfor %}
+        {% if subs|length == 0 %}
+        <tr><td colspan="5" class="muted">No subscribers yet.</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

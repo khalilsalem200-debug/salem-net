@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="page-head">
+  <h2>{{ "Add Service" if mode=="add" else "Edit Service" }}</h2>
+</div>
+
+<div class="card">
+  <form method="POST" class="form">
+
+    <label>Service Name</label>
+    <input name="name" required value="{{ service['name'] if service else '' }}">
+
+    <label>Speed</label>
+    <input name="speed" required value="{{ service['speed'] if service else '' }}">
+
+    <label>Price (USD)</label>
+    <input name="price" type="number" step="0.01" required value="{{ service['price'] if service else '' }}">
+
+    <button class="btn primary" type="submit">
+      {{ "Add Service" if mode=="add" else "Update Service" }}
+    </button>
+
+  </form>
+</div>
+{% endblock %}

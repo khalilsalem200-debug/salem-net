@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h2>{{ "Add Subscriber" if mode=="add" else "Edit Subscriber" }}</h2>
+    <div class="muted">Monthly subscription (USD) with 6 services</div>
+  </div>
+  <a class="btn ghost" href="{{ url_for('subscribers') }}">Back</a>
+</div>
+
+<div class="card">
+  <form method="POST" class="form">
+    <div class="grid-2">
+      <div>
+        <label>Full Name *</label>
+        <input name="name" required value="{{ sub['name'] if sub else '' }}" placeholder="Subscriber name">
+      </div>
+      <div>
+        <label>Phone</label>
+        <input name="phone" value="{{ sub['phone'] if sub else '' }}" placeholder="76xxxxxx">
+      </div>
+    </div>
+
+    <label>Address</label>
+    <input name="address" value="{{ sub['address'] if sub else '' }}" placeholder="Tyre / Beirut ...">
+
+    <div class="grid-2">
+      <div>
+        <label>Service *</label>
+        <select name="service_id" required>
+          {% for sv in services %}
+            <option value="{{ sv['id'] }}" {% if sub and (sub['service_id'] == sv['id']) %}selected{% endif %}>
+              {{ sv['name'] }} ({{ sv['speed'] }}) - ${{ sv['price'] }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <label>Start Date</label>
+        <input type="date" name="start_date" value="{{ sub['start_date'] if sub else '' }}">
+      </div>
+    </div>
+
+    {% if mode=="edit" %}
+      <label>Expiry Date</label>
+      <input type="date" name="expiry_date" value="{{ sub['expiry_date'] }}">
+    {% else %}
+      <p class="muted">Expiry Date will be auto set to +30 days.</p>
+    {% endif %}
+
+    <button class="btn primary" type="submit">{{ "Add" if mode=="add" else "Save" }}</button>
+  </form>
+</div>
+{% endblock %}

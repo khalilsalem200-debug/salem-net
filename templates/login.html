@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="center-card">
+  <div class="card">
+    <h1 class="h1">Login</h1>
+    <p class="muted">Default: <b>admin</b> / <b>admin123</b> (غيّرهم لاحقاً)</p>
+
+    <form method="POST" class="form">
+      <label>Username</label>
+      <input name="username" required placeholder="admin">
+
+      <label>Password</label>
+      <input name="password" type="password" required placeholder="••••••••">
+
+      <button class="btn primary" type="submit">Sign in</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

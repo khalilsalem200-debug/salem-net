@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="page-head">
+  <h2>Service Report</h2>
+</div>
+
+<div class="card">
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Service</th>
+          <th>Speed</th>
+          <th>Price</th>
+          <th>Total Subs</th>
+          <th>Active</th>
+          <th>Expired</th>
+          <th>Expected Income</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in report %}
+        <tr>
+          <td>{{ r.name }}</td>
+          <td>{{ r.speed }}</td>
+          <td>${{ r.price }}</td>
+          <td>{{ r.total }}</td>
+          <td class="badge ok">{{ r.active }}</td>
+          <td class="badge bad">{{ r.expired }}</td>
+          <td class="big">${{ "%.2f"|format(r.income) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

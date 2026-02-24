@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="page-head">
+  <h2>Services Management</h2>
+  <a class="btn primary" href="{{ url_for('service_add') }}">+ Add Service</a>
+</div>
+
+<div class="card">
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Speed</th>
+          <th>Price</th>
+          <th class="right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in services %}
+        <tr>
+          <td>{{ s["id"] }}</td>
+          <td>{{ s["name"] }}</td>
+          <td>{{ s["speed"] }}</td>
+          <td>${{ s["price"] }}</td>
+          <td class="right">
+            <a class="btn small" href="{{ url_for('service_edit', sid=s['id']) }}">Edit</a>
+
+            <form method="POST" action="{{ url_for('service_delete', sid=s['id']) }}" style="display:inline;" onsubmit="return confirm('Delete this service?');">
+              <button class="btn small danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
